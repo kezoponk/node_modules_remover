@@ -1,14 +1,14 @@
 #!/bin/sh
-delete="node_modules"
+delete='node_modules'
 start_dir=$(ls)
-deleted_in=""
+deleted_in=''
 
 function check_for_item() {
   if [ "$1" == "$delete" ];
   then
     rm -rf $delete
     deleted_item=true
-    deleted_in+="$PWD/,"
+    deleted_in+="$PWD,"
   fi
 }
 
@@ -26,7 +26,7 @@ function another_dir {
         check_for_item "$item"
         if [ "$deleted_item" == true ];
         then
-          echo $'\e[31m$ Found & deleted in '$PWD $'\e[0m'
+          echo $'\e[93mFound & deleted in '$PWD $'\e[0m'
           deleted_item=false
           continue;
         fi
@@ -50,8 +50,9 @@ do
     fi
 done
 
-echo $'"\e[32m'$delete$'\e[0m" Found & deleted in: '
+echo
+echo $'\e[32m"'$delete$'"\e[0m found & deleted: '
 IFS=','
 for dir in `echo "$deleted_in"`
-  do echo $'\e[33m'$dir $'\e[0m' ""
+  do echo "$dir/$delete"
 done
