@@ -2,13 +2,15 @@
 delete='node_modules'
 start_dir=$(ls)
 deleted_in=''
+scanned_items=0
 
-function check_for_item() {
+function scan_for_item() {
   if [ "$1" == "$delete" ];
   then
-    rm -rf $delete
-    deleted_item=true
+    #rm -rf $delete
     deleted_in+="$PWD,"
+    echo $'\e[93mFound in '$PWD $'\e[0m'
+    continue;
   fi
 }
 
@@ -18,41 +20,44 @@ function another_dir {
   current_dir=$(ls)
   for item in $current_dir
   do
-      # If item is a directory, enter and scan for $delete AND other directories to scan through
-      # The loop goes deeper and deeper into every directory til it can't dig any deeper
-      if [[ -d $item ]]; then
+    # If item is a directory, enter and scan for $delete AND other directories to scan through
+    # The loop goes deeper and deeper into every directory til it can't dig any deeper
+    scan_for_item "$item"
+    scanned_items=$(($scanned_items + 1))
 
-        # If contains node_modules, delete it
-        check_for_item "$item"
-        if [ "$deleted_item" == true ];
-        then
-          echo $'\e[93mFound & deleted in '$PWD $'\e[0m'
-          deleted_item=false
-          continue;
-        fi
-
-        # If directory was not $delete, go deeper
-        another_dir "$item"
-      fi
+    if [ -d $item ]; then
+      # If directory was not $delete, go deeper
+      another_dir "$item"
+    fi
   done
-
   # If the loop gets here, it means there are no more items in the current directory
   # so it moves out of the current directory and enters the next if there are any
   cd ../
 }
 
+# Main
 for item in $start_dir
 do
-    # If item is a directory
-    if [[ -d $item ]]; then
-        check_for_item "$item"
-        another_dir "$item"
-    fi
+  scan_for_item "$item"
+  scanned_items=$(($scanned_items + 1))
+
+  # If item is a directory, enter it
+  if [ -d $item ]; then
+    another_dir "$item"
+  fi
 done
 
+# Purge finished
 echo
-echo $'\e[32m"'$delete$'"\e[0m found & deleted: '
+echo $'\e[32m"'$delete$'"\e[0m found: Yes is default'
 IFS=','
 for dir in `echo "$deleted_in"`
-  do echo "$dir/$delete"
+do
+  read -p "$dir/$delete, delete? [Y/n] " choice
+  if [ "$choice" != "n" ] && [ "$choice" != "N" ]; then
+    echo "Deleting"
+    rm -rf $dir/$delete
+  fi
 done
+
+printf "\nTotal scanned items: $scanned_items\n"
