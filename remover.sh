@@ -1,14 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 delete='node_modules'
 start_dir=$(ls)
-deleted_in=''
+delete_in=''
 scanned_items=0
 
 function scan_for_item() {
   if [ "$1" == "$delete" ];
   then
-    #rm -rf $delete
-    deleted_in+="$PWD,"
+    delete_in+="$PWD,"
     echo $'\e[93mFound in '$PWD $'\e[0m'
     continue;
   fi
@@ -35,7 +34,7 @@ function another_dir {
   cd ../
 }
 
-# Main
+# Main, works similiar like the find or tree command
 for item in $start_dir
 do
   scan_for_item "$item"
@@ -49,12 +48,12 @@ done
 
 # Purge finished
 echo
-echo $'\e[32m"'$delete$'"\e[0m found: Yes is default'
+echo $'\e[32m"'$delete$'"\e[0m found:'
 IFS=','
-for dir in `echo "$deleted_in"`
+for dir in `echo "$delete_in"`
 do
-  read -p "$dir/$delete, delete? [Y/n] " choice
-  if [ "$choice" != "n" ] && [ "$choice" != "N" ]; then
+  read -p "$dir/$delete - Delete this? Empty for Yes [Y/n] " choice
+  if [[ $(echo $choice | tr '[:upper:]' '[:lower:]') =~ "n" ]]; then
     echo "Deleting"
     rm -rf $dir/$delete
   fi
