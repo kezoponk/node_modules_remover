@@ -4,4 +4,4 @@ Run in the path you want to scan for node_modules archives
 ./remover.sh
 ```
 
-Can be easily modified to search for another entry
+Can easily be modified what to target by editing the delete variable on line 2
