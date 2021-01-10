@@ -52,9 +52,9 @@ echo $'\e[32m"'$delete$'"\e[0m found:'
 IFS=','
 for dir in `echo "$delete_in"`
 do
-  read -p "$dir/$delete - Delete this? Empty for Yes [Y/n] " choice
-  if [[ $(echo $choice | tr '[:upper:]' '[:lower:]') =~ "n" ]]; then
-    echo "Deleting"
+  read -p "$dir/$delete - Delete this? Empty for Yes [Y/n]: " choice
+  if [[ !($(echo $choice | tr '[:upper:]' '[:lower:]') =~ "n") ]]; then
+    echo "Deleting $dir/$delete"
     rm -rf $dir/$delete
   fi
 done
