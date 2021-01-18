@@ -9,7 +9,7 @@ Can easily be modified what to target by editing the delete variable on line 2
 
 <br>
 
-### Update
+## Update
 
 After some experimenting, this (long) one liner does the same job way faster than the script...
 
