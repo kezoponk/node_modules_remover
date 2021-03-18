@@ -11,7 +11,7 @@ Can easily be modified what to target by editing the delete variable on line 2
 
 ## Update
 
-After some experimenting, this (long) one liner does the exact same job but way faster than the script...
+After some experimenting, this (long) one liner does the exact same job (without output) but way faster than the script...
 
 ```shell
 IFS=$'\n';for dir in $(find .|grep /node_modules|grep -v '/node_modules.');do read -p "$dir - Delete this? Empty for Yes [Y/n]: " c;if [ "$c" == "Y" ];then rm -rf $dir;fi;done
