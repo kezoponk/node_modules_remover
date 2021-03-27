@@ -14,5 +14,5 @@ Can easily be modified what to target by editing the delete variable on line 2
 After some experimenting, this (long) one liner does the exact same job (without output) but way faster than the script...
 
 ```shell
-IFS=$'\n';for dir in $(find .|grep /node_modules|grep -v '/node_modules.');do read -p "$dir - Delete this? Empty for Yes [Y/n]: " c;if [ "$c" == "Y" ];then rm -rf $dir;fi;done
+T='node_modules';IFS=$'\n';for dir in $(find .|grep "/$T"|grep -v "/$T.");do read -p "$dir - Delete this? Empty for Yes [Y/n]: " c;if [ "$c" != "n" ];then rm -rf $dir;fi;done
 ```
